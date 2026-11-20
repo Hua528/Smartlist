@@ -1,0 +1,460 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartList | 智慧生活清單</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- 側邊導覽列 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">✓</span>
+                <span>SmartList</span>
+            </div>
+
+            <p class="menu-title">主選單</p>
+
+            <nav class="menu">
+                <a href="#homeSection" class="menu-item active" data-menu-action="home">⌂ 首頁</a>
+                <a href="#shoppingListSection" class="menu-item" data-menu-action="lists">☷ 購物清單</a>
+                <a href="#" class="menu-item" data-menu-action="products">▦ 商品管理</a>
+                <a href="#" class="menu-item" data-menu-action="categories">▤ 分類管理</a>
+                <a href="#" class="menu-item" data-menu-action="budget">＄ 預算管理</a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <p>SmartList</p>
+                <small>智慧生活，輕鬆管理</small>
+            </div>
+        </aside>
+
+        <!-- 主要內容 -->
+        <main class="main-content" id="homeSection">
+
+            <header class="topbar">
+                <div>
+                    <h1>首頁儀表板</h1>
+                    <p>歡迎回來！今天也讓生活更有條理。</p>
+                </div>
+
+                <div class="user-avatar">S</div>
+            </header>
+
+            <section class="welcome-section">
+                <div>
+                    <p class="welcome-label">SMART LIVING</p>
+                    <h2>聰明購物，從整理清單開始！</h2>
+                    <p>管理你的購物清單，掌握每一筆生活支出。</p>
+                </div>
+
+                <div class="welcome-icon">🛒</div>
+            </section>
+
+            <!-- 統計卡片 -->
+            <section class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon green">☷</div>
+                    <p>購物清單</p>
+                    <h3 id="listCount">3</h3>
+                    <small>目前建立的清單</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">▦</div>
+                    <p>商品總數</p>
+                    <h3 id="productCount">12</h3>
+                    <small>所有清單中的商品</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">✓</div>
+                    <p>已購買商品</p>
+                    <h3 id="purchasedCount">7</h3>
+                    <small>已完成購買的商品</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">$</div>
+                    <p>本月消費</p>
+                    <h3 id="monthlyExpense">$2,450</h3>
+                    <small>本月已購買金額</small>
+                </div>
+
+            </section>
+
+            <!-- 最近清單 -->
+            <section class="list-section" id="shoppingListSection">
+
+                <div class="section-header">
+                    <div>
+                        <h2>最近購物清單</h2>
+                        <p>查看你最近建立的購物計畫</p>
+                    </div>
+
+                    <button class="primary-button" id="addListBtn">
+                        + 新增清單
+                    </button>
+                </div>
+
+                <div class="shopping-list" id="shoppingList"></div>
+
+            </section>
+
+<!-- 新增購物清單視窗 -->
+<div class="modal" id="listModal">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <div>
+                <h2>新增購物清單</h2>
+                <p>建立一份新的購物計畫</p>
+            </div>
+
+            <button type="button" class="close-button" id="closeModal">
+                ×
+            </button>
+        </div>
+
+        <form id="listForm">
+
+            <div class="form-group">
+                <label for="listName">清單名稱</label>
+                <input
+                    type="text"
+                    id="listName"
+                    placeholder="例如：本週家庭採買"
+                    maxlength="40"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="listDate">購物日期</label>
+                <input
+                    type="date"
+                    id="listDate"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="listBudget">購物預算（元）</label>
+                <input
+                    type="number"
+                    id="listBudget"
+                    placeholder="請輸入預算"
+                    min="1"
+                    step="1"
+                    required
+                >
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="cancel-button" id="cancelModal">
+                    取消
+                </button>
+
+                <button type="submit" class="primary-button">
+                    儲存清單
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- 商品管理視窗 -->
+<div class="modal" id="productModal">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <div>
+                <h2 id="productModalTitle">商品管理</h2>
+
+<button
+    type="button"
+    id="editListButton"
+    class="edit-list-button"
+>
+    ✏️ 編輯清單
+</button>
+
+<button
+    type="button"
+    id="deleteListButton"
+    class="delete-list-button"
+>
+    刪除清單
+</button>
+
+
+                <p>管理這份購物清單的商品</p>
+            </div>
+
+            <button
+                type="button"
+                class="close-button"
+                id="closeProductModal"
+            >
+                ×
+            </button>
+        </div>
+
+
+<!-- ===== 編輯購物清單視窗 ===== -->
+<div id="editListModal" class="modal">
+
+    <div class="modal-content edit-list-content">
+
+        <button
+            type="button"
+            id="closeEditListModal"
+            class="edit-modal-close"
+            aria-label="關閉編輯視窗"
+        >
+            ×
+        </button>
+
+        <h2>編輯購物清單</h2>
+
+        <form id="editListForm">
+
+            <div class="form-group">
+                <label for="editListName">清單名稱</label>
+                <input
+                    type="text"
+                    id="editListName"
+                    maxlength="50"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="editListBudget">購物預算（元）</label>
+                <input
+                    type="number"
+                    id="editListBudget"
+                    min="0"
+                    step="1"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="primary-button">
+                儲存修改
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+        
+<div id="productArea">
+
+    <p id="budgetReminder" class="budget-reminder" role="status" aria-live="polite" hidden></p>
+
+    <form id="productForm">
+
+        <div class="form-group">
+            <label for="productName">商品名稱</label>
+            <input
+                type="text"
+                id="productName"
+                placeholder="例如：鮮奶"
+                maxlength="50"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="productCategory">商品分類</label>
+            <select id="productCategory" required>
+                <option value="">請選擇分類</option>
+                <option value="生鮮食品">生鮮食品</option>
+                <option value="飲料零食">飲料零食</option>
+                <option value="生活用品">生活用品</option>
+                <option value="清潔用品">清潔用品</option>
+                <option value="肉類海鮮">肉類海鮮</option>
+                <option value="其他">其他</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="productQuantity">購買數量</label>
+            <input
+                type="number"
+                id="productQuantity"
+                min="1"
+                step="1"
+                value="1"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="productPrice">商品單價（元）</label>
+            <input
+                type="number"
+                id="productPrice"
+                min="0"
+                step="1"
+                placeholder="例如：85"
+                required
+            >
+        </div>
+
+        <div class="modal-actions">
+            <button type="submit" class="primary-button">
+                + 新增商品
+            </button>
+        </div>
+
+    </form>
+
+    <h3 class="product-list-title">商品清單</h3>
+
+    <div id="productList">
+        <p class="empty-message">目前尚無商品</p>
+    </div>
+
+</div>
+
+
+    </div>
+</div>
+
+<!-- ===== 編輯商品視窗 ===== -->
+<div id="editProductModal" class="modal">
+
+    <div class="modal-content">
+
+        <button
+            type="button"
+            id="closeEditProductModal"
+            class="edit-modal-close"
+            aria-label="關閉編輯商品視窗"
+        >
+            ×
+        </button>
+
+        <h2>編輯商品</h2>
+
+        <form id="editProductForm">
+
+            <div class="form-group">
+                <label for="editProductName">商品名稱</label>
+                <input
+                    type="text"
+                    id="editProductName"
+                    maxlength="50"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="editProductCategory">商品分類</label>
+                <select id="editProductCategory" required>
+                    <option value="生鮮食品">生鮮食品</option>
+                    <option value="飲料零食">飲料零食</option>
+                    <option value="生活用品">生活用品</option>
+                    <option value="清潔用品">清潔用品</option>
+                    <option value="肉類海鮮">肉類海鮮</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="editProductQuantity">購買數量</label>
+                <input
+                    type="number"
+                    id="editProductQuantity"
+                    min="1"
+                    step="1"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="editProductPrice">商品單價（元）</label>
+                <input
+                    type="number"
+                    id="editProductPrice"
+                    min="0"
+                    step="1"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="primary-button">
+                儲存商品修改
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+            <footer class="footer">
+                © 2026 SmartList. 智慧生活清單管理系統
+            </footer>
+
+        </main>
+    </div>
+
+    <div id="listPickerModal" class="modal navigation-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2 id="listPickerTitle">選擇購物清單</h2>
+                    <p>請選擇要管理的購物清單</p>
+                </div>
+                <button type="button" class="close-button" id="closeListPicker">×</button>
+            </div>
+            <form id="listPickerForm">
+                <div class="form-group">
+                    <label for="navListSelect">購物清單</label>
+                    <select id="navListSelect" required></select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="cancel-button" id="cancelListPicker">取消</button>
+                    <button type="submit" class="primary-button">繼續</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="categoryModal" class="modal navigation-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2>分類管理</h2>
+                    <p>新增或移除商品分類</p>
+                </div>
+                <button type="button" class="close-button" id="closeCategoryModal">×</button>
+            </div>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label for="categoryName">新增分類</label>
+                    <input type="text" id="categoryName" maxlength="40" required>
+                </div>
+                <button type="submit" class="primary-button">新增分類</button>
+            </form>
+            <ul id="categoryList" class="category-list"></ul>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
